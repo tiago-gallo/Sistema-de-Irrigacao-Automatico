@@ -6,7 +6,7 @@ Autores:  Tiago Gallo Faria - 200014441
 
 Professor:  Fabio Souza
 Disciplina: Sistemas Operacionais e RTOS de Sistemas Embarcados
-Instituição:  Centro Universitario Salesiano de São Palo
+Instituição:  Centro Universitario Salesiano de São Paulo
 
 Introdução
 Este projeto tem a finalidade de automatizar um sistema de irrigação manual aplicando todo o conhecimento adquirido em Sistemas Operacionais e RTOS de Sistemas Embarcados. 
