@@ -1,7 +1,7 @@
 #ifndef _DISPLAY_H_
 #define _DISPLAY_H_
 
-
+#include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 

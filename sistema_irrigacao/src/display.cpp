@@ -1,4 +1,4 @@
-#include "display.h"
+#include <display.h>
 
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
@@ -11,8 +11,7 @@ void displayInit(){
   }
 
   display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
+
 }
 
 void imprimeSensorDisplay(int valor){
