@@ -9,9 +9,7 @@ void displayInit(){
     Serial.println(F("ERRO ao iniciar o display SSD1306"));
     for(;;);
   }
-
   display.clearDisplay();
-
 }
 
 void imprimeSensorDisplay(int valor){
