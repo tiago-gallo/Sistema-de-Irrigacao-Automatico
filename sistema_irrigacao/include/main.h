@@ -6,5 +6,6 @@
     #include "display.h"
     #include "saida.h"
     #include "botao.h"
+    #include "mqtt.h"
 
 #endif //_MAIN_H_

@@ -16,6 +16,7 @@ void setup() {
   displayInit();  //inicia display
   init_bt();
   init_valvula();
+  mqttInit();
 }
 
 void loop() {
