@@ -7,7 +7,7 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-void displayIni();
+void displayInit();
 void SensorDisplayManual(int valor);
 void SensorDisplayAutomatico(int valor)
 

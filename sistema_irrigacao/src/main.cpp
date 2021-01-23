@@ -12,7 +12,10 @@ Instituição:  Centro Universitario Salesiano de São Paulo
 #include "main.h"
 
 void setup() {
+  Serial.begin(9600);
   displayInit();  //inicia display
+  init_bt();
+  init_valvula();
 }
 
 void loop() {
