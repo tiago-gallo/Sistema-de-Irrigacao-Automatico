@@ -1,15 +1,13 @@
 #ifndef _DISPLAY_H_
 #define _DISPLAY_H_
 
-#include <Arduino.h>
-#include "LiquidCrystal_I2C.h"
-#include <Wire.h>
+    #include <Arduino.h>
 
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+    #include <Wire.h>
+    #include <LiquidCrystal_I2C.h>
+    #include <sensor.h>
 
-void displayInit();
-void SensorDisplayManual(int valor);
-void SensorDisplayAutomatico(int valor)
+    void displayInit();
+    void displayImprimeAutomatico(int valor);
 
-
-#endif
+#endif //_MAIN_H_

@@ -1,26 +1,33 @@
-#include "display.h"
+#include <display.h>
+#include <sensor.h>
 
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void displayInit(){
-  lcd.begin();
-  lcd.backlight();
-  lcd.clear();
+    lcd.init();
+    lcd.backlight();
+    lcd.clear();
 }
 
-void SensorDisplayManual(int valor){
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.print("Sist. Manual");
-    display.setCursor(0, 1);
-    /*display.println(String(valor));*/
-    display.display(); 
+void displayImprimeAutomatico(int valorD){
+    lcd.clear();
+    lcd.setCursor(3,0);
+    lcd.print("Automatico");
+    lcd.setCursor(0,1);
+    lcd.print("% umidade:");
+    lcd.setCursor(10,1);
+    lcd.print(valorD);
+    lcd.print("%");
+    delay(500);
 }
 
-void SensorDisplayAutomatico(int valor){
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.print("Sist. Automat.");
-    display.setCursor(0, 1);
-    /*display.println(String(valor));*/
-    display.display(); 
+void displayImprimeManual(int valorD){
+    lcd.clear();
+    lcd.setCursor(5,0);
+    lcd.print("Manual");
+    lcd.setCursor(0,1);
+    lcd.print("% umidade:");
+    lcd.setCursor(10,1);
+    lcd.println(valorD);
+    delay(500);
 }
