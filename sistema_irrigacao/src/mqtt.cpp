@@ -13,14 +13,14 @@ PubSubClient client(espClient);
 void mqttReconect();
 
 /* configuraçãoes da REDE e broker MQTT*/
-const char* ssid = "xxxxxxxxxxxxxxxxxxxxxx";
-const char* password =  "xxxxxxxxxxxxxxxxxxx";
+const char* ssid = "XXXXXXXXX";
+const char* password =  "XXXXXXXXXXXXXXX";
 
 /* configuraçãoes do broker MQTT*/
 const char* mqttServer = "io.adafruit.com";
 const int mqttPort = 1883;
-const char* mqttUser = "xxxxxxxxxxxxxxxxxxx";
-const char* mqttPassword = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+const char* mqttUser ="danillo_lins";
+const char* mqttPassword ="aio_FXXC62t1svjXnmGP5jlplDHEBAlT";
 
 void mqttInit(){
    
@@ -34,6 +34,8 @@ void mqttInit(){
 
   client.setServer(mqttServer, mqttPort);
 
+  //client.subscribe("danillo_lins/feeds/acionar-valvula");
+
 
 }
 
@@ -43,12 +45,21 @@ void mqttIsConected(){
     }
 }
 
-void mqttSend(char mensagem[]){
+void mqttSend_sensor(char mensagem[]){
     //Envia a mensagem ao broker
-    client.publish("fabiosouza_io/feeds/test", mensagem);
-    Serial.print("Valor enviado: ");
+    client.publish("danillo_lins/feeds/sensor", mensagem);
+    Serial.print("Valor enviado sensor: ");
     Serial.println(mensagem);
 }
+
+void mqttSend_valvulaState(char mensagem[]){
+    //Envia a mensagem ao broker
+    client.publish("danillo_lins/feeds/valvula", mensagem);
+    Serial.print("Valor enviado valvula: ");
+    Serial.println(mensagem);
+}
+
+
 
 //função pra reconectar ao servido MQTT
 void mqttReconect() {
@@ -57,6 +68,7 @@ void mqttReconect() {
 
     if (client.connect("ESP32Client", mqttUser, mqttPassword ))
     {
+      //client.subscribe("danillo_lins/feeds/acionar-valvula");
       Serial.println("Conectado ao broker!");
     }
     else
@@ -67,3 +79,24 @@ void mqttReconect() {
     }
   }
 }
+/*
+void callback_valvula(char* topic, byte* payload, unsigned int length) {
+ 
+  Serial.print("Mensagem do broker: ");
+  Serial.println(topic);
+ 
+  Serial.print("Estado da valvula:");
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+  }
+ 
+  Serial.println();
+  Serial.println("-----------------------");
+ 
+}
+
+
+void mqttReceive(){
+  client.setCallback(callback_valvula);
+}
+*/
