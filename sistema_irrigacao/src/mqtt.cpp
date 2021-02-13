@@ -15,8 +15,8 @@ PubSubClient client(espClient);
 void mqttReconect();
 
 /* configuraçãoes da REDE e broker MQTT*/
-const char* ssid = "71BRISAS";
-const char* password =  "VIVO7brisas1";
+const char* ssid = "XXXXXXXXX";
+const char* password =  "xxxxxxxxxxxxxxxxxxxxxxxxx";
 
 /* configuraçãoes do broker MQTT*/
 const char* mqttServer = "io.adafruit.com";
