@@ -4,8 +4,24 @@ Task             Core  Prio     Descrição
 vTaskSensor        1     1     faz a leitura do sensor analógico
 vTaskPrint         1     1     Imprime o valor do sensor o display
 vTaskMQTT          0     2     Publica valor do Sensor em tópico MQTT
+
+1- Sensor (timer)
+2- Task display + envia Mqtt (estado da valvula + Leitura do sensor)
+3- Task Botão (timer)
+4- Task Mqtt Recebimento do Boker (acinamento pelo broker da valvula)
 */
 
+#include <Arduino.h>
+
+#include "rtos.h"
+#include "botao.h"
+#include "display.h"
+#include "main.h"
+#include "mqtt.h"
+#include "saida.h"
+#include "sensor.h"
+
+unsigned char valvula_state;
 
 xTimerHandle xTimer;
 QueueHandle_t xFila; 
@@ -13,6 +29,22 @@ QueueHandle_t xFila;
 TaskHandle_t xTaskPrintHandle;
 TaskHandle_t xTaskMQTTHandle;
 TaskHandle_t xTaskSensorHandle;
+
+void callback_valvula(char* topic, byte* payload, unsigned int length) {
+ 
+  Serial.print("Mensagem do broker: ");
+  Serial.println(topic);
+ 
+  Serial.print("Estado da valvula:");
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+    valvula_state = payload[i] - 48 ;
+  }
+  
+  Serial.println();
+  Serial.println("-----------------------");
+ 
+}
 
 void vTaskSensor(void *pvParameters );
 void vTaskPrint(void *pvParameters);
@@ -39,9 +71,11 @@ void vTaskSensor(void *pvParameters ){
   
   int adcValue;
   while(1){
-    adcValue = sensorRead();
+    
+    //adcValue = sensorRead();
     xQueueOverwrite(xFila, &adcValue);/* envia valor atual de count para fila*/
     vTaskDelay(pdMS_TO_TICKS(1000)); /* Aguarda 5000 ms antes de uma nova iteração*/
+    
   }
 }
 
@@ -52,7 +86,7 @@ void vTaskPrint(void *pvParameters ){
   int valor_recebido = 0;
   while(1){
       if(xQueueReceive(xFila, &valor_recebido, portMAX_DELAY) == pdTRUE) {//verifica se há valor na fila para ser lido. Espera 1 segundo
-        imprimeSensorDisplay(valor_recebido);
+        //imprimeSensorDisplay(valor_recebido);
       }
   }
 }
@@ -69,7 +103,7 @@ void vTaskMQTT(void *pvParameters){
       if(xQueueReceive(xFila, &valor_recebido, portMAX_DELAY) == pdTRUE) { //verifica se há valor na fila para ser lido. Espera 1 segundo
         mqttIsConected();
         sprintf(mensagem, "%d", valor_recebido);
-        mqttSend(mensagem);       
+        //mqttSend(mensagem);       
         vTaskDelay(15000);
       }
   }

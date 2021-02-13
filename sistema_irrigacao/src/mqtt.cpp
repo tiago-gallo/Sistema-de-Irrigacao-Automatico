@@ -10,17 +10,19 @@
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+
+
 void mqttReconect();
 
 /* configuraçãoes da REDE e broker MQTT*/
-const char* ssid = "XXXXXXXXX";
-const char* password =  "XXXXXXXXXXXXXXX";
+const char* ssid = "71BRISAS";
+const char* password =  "VIVO7brisas1";
 
 /* configuraçãoes do broker MQTT*/
 const char* mqttServer = "io.adafruit.com";
 const int mqttPort = 1883;
 const char* mqttUser ="danillo_lins";
-const char* mqttPassword ="aio_FXXC62t1svjXnmGP5jlplDHEBAlT";
+const char* mqttPassword ="aio_vyAc897VRhNE4UoP7JqOISrKqY3c";
 
 void mqttInit(){
    
@@ -34,7 +36,6 @@ void mqttInit(){
 
   client.setServer(mqttServer, mqttPort);
 
-  //client.subscribe("danillo_lins/feeds/acionar-valvula");
 
 
 }
@@ -68,8 +69,8 @@ void mqttReconect() {
 
     if (client.connect("ESP32Client", mqttUser, mqttPassword ))
     {
-      //client.subscribe("danillo_lins/feeds/acionar-valvula");
-      Serial.println("Conectado ao broker!");
+      client.subscribe("danillo_lins/feeds/acionar-valvula");
+      //Serial.println("Conectado ao broker!");
     }
     else
     {
@@ -89,14 +90,22 @@ void callback_valvula(char* topic, byte* payload, unsigned int length) {
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
   }
+  valvula_state = (char)payload;
  
   Serial.println();
   Serial.println("-----------------------");
  
 }
-
+*/
 
 void mqttReceive(){
   client.setCallback(callback_valvula);
 }
-*/
+
+void mqttLoop(){
+  client.loop();
+}
+
+void mqttSubcribe(){
+  client.subscribe("danillo_lins/feeds/acionar-valvula");
+}
