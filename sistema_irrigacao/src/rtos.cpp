@@ -26,6 +26,7 @@ vTaskValvula       0     1     Faz o acionamento da eletroválvula
 
 unsigned char valvula_state;
 unsigned char btn_state;
+char mensagem_sensor[30];
 
 //Handle dos timers
 
@@ -112,6 +113,9 @@ void vTaskPrint(void *pvParameters ){
   while(1){
       if(xQueueReceive(xFila, &valor_recebido, portMAX_DELAY) == pdTRUE) {//verifica se há valor na fila para ser lido. Espera 1 segundo
         //imprimeSensorDisplay(valor_recebido);
+        mqttIsConected();
+        sprintf(mensagem_sensor, "%d", valor_recebido);
+        mqttSend_sensor(mensagem_sensor);
       }
   }
 }
@@ -133,8 +137,16 @@ void vTaskValvula(void *pvParameters){
   init_valvula();
   
   while(1){
-    if(valvula_state == 1) acionar_valvula();
-    else desligar_valvula();
+    if(valvula_state == 1) {
+      acionar_valvula();
+      //display
+      //MQTTSend_Valvula
+    }  
+    else {
+      desligar_valvula();
+      //Display
+      //MQTTSend_Valvula
+    }
   }
 }
 

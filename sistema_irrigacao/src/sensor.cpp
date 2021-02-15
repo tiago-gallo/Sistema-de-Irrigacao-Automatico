@@ -8,5 +8,5 @@ int le_sensor(){
         n--;    
     }
     value /= 10;   
-    return map(value,0,4095,0,100);
+    return map(value,0,4095,100,0);
 }
