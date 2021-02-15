@@ -59,8 +59,8 @@ void callBackTimer_sensor(TimerHandle_t pxTimer );
 void rtosInit(){
 
 
-    //Filas 
-    xFila = xQueueCreate(1, sizeof(int));
+    //Criação Fila
+    xFila = xQueueCreate(3, sizeof(int));
 
     //Timers com auto-reload
     xTimer_sensor = xTimerCreate("Timer_sensor", pdMS_TO_TICKS(15000), pdTRUE, 0, callBackTimer_sensor);
@@ -90,6 +90,7 @@ void callBackTimer_sensor(TimerHandle_t pxTimer ){
 }
 
 
+/* Implemntação da vTaskBotão  */
 void vTaskBotao(void *pvParameters){
   (void) pvParameters;
 
@@ -104,8 +105,6 @@ void vTaskBotao(void *pvParameters){
   }
 }
 
-
-
 /* Implemntação da vTaskDisplay  */
 void vTaskPrint(void *pvParameters ){
   (void) pvParameters;  /* Apenas para o Compilador não retornar warnings */
@@ -116,7 +115,6 @@ void vTaskPrint(void *pvParameters ){
       }
   }
 }
-
 
 /*Implementação da Task de Recebimento de dados MQTT */
 void vTaskMQTTReceive(void *pvParameters){
@@ -129,6 +127,7 @@ void vTaskMQTTReceive(void *pvParameters){
   }
 }
 
+/* Implemntação da vTaskValvula */
 void vTaskValvula(void *pvParameters){
   (void) pvParameters;
   init_valvula();
@@ -138,9 +137,6 @@ void vTaskValvula(void *pvParameters){
     else desligar_valvula();
   }
 }
-
-
-
 
 void callback_valvula(char* topic, byte* payload, unsigned int length) {
  
