@@ -112,7 +112,15 @@ void vTaskPrint(void *pvParameters ){
   int valor_recebido = 0;
   while(1){
       if(xQueueReceive(xFila, &valor_recebido, portMAX_DELAY) == pdTRUE) {//verifica se há valor na fila para ser lido. Espera 1 segundo
-        //imprimeSensorDisplay(valor_recebido);
+        
+          //imprimeSensorDisplay(valor_recebido);
+          
+          if(btn_state == 1)
+		  diplayImprimeManual(valor_recebido);
+  
+		  else
+		  displayImprimeAutomatico(valor_recebido);
+          
         mqttIsConected();
         sprintf(mensagem_sensor, "%d", valor_recebido);
         mqttSend_sensor(mensagem_sensor);
