@@ -38,19 +38,19 @@ QueueHandle_t xFila;
 //Handle das Tarefas
 TaskHandle_t xTaskBotaoHandle;
 TaskHandle_t xTaskPrintHandle;
-TaskHandle_t xTaskMQTTReceiveHandle;
+//TaskHandle_t xTaskMQTTReceiveHandle;
 TaskHandle_t xTaskValvulaHandle;
 
 
 
 //Funcoes
-void callback_valvula(char* topic, byte* payload, unsigned int length);
+//void callback_valvula(char* topic, byte* payload, unsigned int length);
 
 
 //Tasks
 void vTaskBotao( void *pvParameters);
 void vTaskPrint(void *pvParameters);
-void vTaskMQTTReceive(void *pvParameters); 
+//void vTaskMQTTReceive(void *pvParameters); 
 void vTaskValvula(void *pvParameters);
 
 
@@ -64,7 +64,7 @@ void rtosInit(){
     xFila = xQueueCreate(3, sizeof(int));
 
     //Timers com auto-reload
-    xTimer_sensor = xTimerCreate("Timer_sensor", pdMS_TO_TICKS(15000), pdTRUE, 0, callBackTimer_sensor);
+    xTimer_sensor = xTimerCreate("Timer_sensor", pdMS_TO_TICKS(1000), pdTRUE, 0, callBackTimer_sensor);
     if( xTimer_sensor == NULL )
     {
       Serial.println("Não foi possível criar o timer_sensor");
@@ -77,7 +77,7 @@ void rtosInit(){
     //Tarefas
     xTaskCreatePinnedToCore(vTaskBotao,  "TaskBotao",  configMINIMAL_STACK_SIZE + 1024,  NULL,  1,  &xTaskBotaoHandle,APP_CPU_NUM);
     xTaskCreatePinnedToCore(vTaskPrint,  "TaskPrint",  configMINIMAL_STACK_SIZE + 1024,  NULL,  1,  &xTaskPrintHandle,APP_CPU_NUM);
-    xTaskCreatePinnedToCore(vTaskMQTTReceive,  "TaskMQTT",  configMINIMAL_STACK_SIZE + 2048,  NULL,  2,  &xTaskMQTTReceiveHandle,PRO_CPU_NUM);  
+    //xTaskCreatePinnedToCore(vTaskMQTTReceive,  "TaskMQTT",  configMINIMAL_STACK_SIZE + 4096,  NULL,  2,  &xTaskMQTTReceiveHandle,PRO_CPU_NUM);  
     xTaskCreatePinnedToCore(vTaskValvula, "TaskValvula", configMINIMAL_STACK_SIZE + 1024, NULL, 1, &xTaskValvulaHandle, PRO_CPU_NUM);
     
     
@@ -87,11 +87,14 @@ void rtosInit(){
 void callBackTimer_sensor(TimerHandle_t pxTimer ){
   int adcValue;
   adcValue = le_sensor();
-  xQueueOverwrite(xFila, &adcValue);
+  //Serial.print("Valor do sensor: ");
+  //Serial.println(adcValue);
+  xQueueSend(xFila,&adcValue,portMAX_DELAY);
 }
 
 
 /* Implemntação da vTaskBotão  */
+
 void vTaskBotao(void *pvParameters){
   (void) pvParameters;
 
@@ -102,25 +105,34 @@ void vTaskBotao(void *pvParameters){
         btn_state = 1; 
       }
       else btn_state = 0;
-      vTaskDelay(pdMS_TO_TICKS(100));
+      Serial.print("estado do botao: ");
+      Serial.println(btn_state);      
+      vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
 
+
 /* Implemntação da vTaskDisplay  */
+
 void vTaskPrint(void *pvParameters ){
-  (void) pvParameters;  /* Apenas para o Compilador não retornar warnings */
+  (void) pvParameters;  
   int valor_recebido = 0;
+
   while(1){
       if(xQueueReceive(xFila, &valor_recebido, portMAX_DELAY) == pdTRUE) {//verifica se há valor na fila para ser lido. Espera 1 segundo
         //imprimeSensorDisplay(valor_recebido);
-        mqttIsConected();
-        sprintf(mensagem_sensor, "%d", valor_recebido);
-        mqttSend_sensor(mensagem_sensor);
+        //mqttIsConected();
+        //sprintf(mensagem_sensor, "%d", valor_recebido);
+        //mqttSend_sensor(mensagem_sensor);
+        Serial.print("Valor do sensor: ");
+        Serial.println(valor_recebido);
       }
   }
 }
 
+
 /*Implementação da Task de Recebimento de dados MQTT */
+/*
 void vTaskMQTTReceive(void *pvParameters){
   (void) pvParameters;
   mqttInit();
@@ -130,14 +142,16 @@ void vTaskMQTTReceive(void *pvParameters){
     mqttLoop();
   }
 }
+*/
 
 /* Implemntação da vTaskValvula */
+
 void vTaskValvula(void *pvParameters){
   (void) pvParameters;
   init_valvula();
   
   while(1){
-    if(valvula_state == 1) {
+    if(btn_state == 1) {
       acionar_valvula();
       //display
       //MQTTSend_Valvula
@@ -147,9 +161,12 @@ void vTaskValvula(void *pvParameters){
       //Display
       //MQTTSend_Valvula
     }
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 
+
+/*
 void callback_valvula(char* topic, byte* payload, unsigned int length) {
  
   Serial.print("Mensagem do broker: ");
@@ -165,3 +182,4 @@ void callback_valvula(char* topic, byte* payload, unsigned int length) {
   Serial.println("-----------------------");
  
 }
+*/

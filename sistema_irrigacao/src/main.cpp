@@ -13,6 +13,7 @@ Instituição:  Centro Universitario Salesiano de São Paulo
 
 void setup() {
   Serial.begin(9600);
+  rtosInit();
   displayInit();  //inicia display
   init_bt();
   init_valvula();

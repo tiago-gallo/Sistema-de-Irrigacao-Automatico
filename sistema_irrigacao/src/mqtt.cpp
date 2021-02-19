@@ -16,13 +16,13 @@ void mqttReconect();
 
 /* configuraçãoes da REDE e broker MQTT*/
 const char* ssid = "XXXXXXXXX";
-const char* password =  "xxxxxxxxxxxxxxxxxxxxxxxxx";
+const char* password =  "XXXXXXXXXXXX";
 
 /* configuraçãoes do broker MQTT*/
 const char* mqttServer = "io.adafruit.com";
 const int mqttPort = 1883;
 const char* mqttUser ="danillo_lins";
-const char* mqttPassword ="aio_vyAc897VRhNE4UoP7JqOISrKqY3c";
+const char* mqttPassword ="XXXXXXXXXX";
 
 void mqttInit(){
    
