@@ -5,6 +5,7 @@
 #include "sensor.h"
 #include "display.h"
 #include "saida.h"
+#include "main.h"
 
 #include <Arduino.h>
 
@@ -14,5 +15,7 @@
 
 
 void rtosInit();
+char retorno_btn_state();
+int retorno_sensor();
 
 #endif

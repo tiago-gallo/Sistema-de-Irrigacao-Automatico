@@ -8,6 +8,7 @@
     #include <sensor.h>
 
     void displayInit();
-    void displayImprimeAutomatico(int valor);
+    void displayImprimeAutomatico(int valorD);
+    void displayImprimeManual(int valorD);
 
 #endif //_MAIN_H_

@@ -16,13 +16,13 @@ void mqttReconect();
 
 /* configuraçãoes da REDE e broker MQTT*/
 const char* ssid = "XXXXXXXXX";
-const char* password =  "XXXXXXXXXXXX";
+const char* password =  "XXXXXXXXXXX";
 
 /* configuraçãoes do broker MQTT*/
 const char* mqttServer = "io.adafruit.com";
 const int mqttPort = 1883;
 const char* mqttUser ="danillo_lins";
-const char* mqttPassword ="XXXXXXXXXX";
+const char* mqttPassword ="XXXXXXXXXXXXXX";
 
 void mqttInit(){
    
@@ -69,8 +69,8 @@ void mqttReconect() {
 
     if (client.connect("ESP32Client", mqttUser, mqttPassword ))
     {
-      client.subscribe("danillo_lins/feeds/acionar-valvula");
-      //Serial.println("Conectado ao broker!");
+      //client.subscribe("danillo_lins/feeds/acionar-valvula");
+      Serial.println("Conectado ao broker!");
     }
     else
     {

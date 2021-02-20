@@ -24,9 +24,8 @@ vTaskValvula       0     1     Faz o acionamento da eletroválvula
 #include "saida.h"
 #include "sensor.h"
 
-unsigned char valvula_state;
-unsigned char btn_state;
-char mensagem_sensor[30];
+char btn_state = 0;
+int sensor_higrometro = 0;
 
 //Handle dos timers
 
@@ -57,6 +56,14 @@ void vTaskValvula(void *pvParameters);
 //Timers
 void callBackTimer_sensor(TimerHandle_t pxTimer );
 
+char retorno_btn_state(){
+  return(btn_state);
+}
+
+int retorno_sensor(){
+  return(sensor_higrometro);
+}
+
 void rtosInit(){
 
 
@@ -76,19 +83,15 @@ void rtosInit(){
 
     //Tarefas
     xTaskCreatePinnedToCore(vTaskBotao,  "TaskBotao",  configMINIMAL_STACK_SIZE + 1024,  NULL,  1,  &xTaskBotaoHandle,APP_CPU_NUM);
-    xTaskCreatePinnedToCore(vTaskPrint,  "TaskPrint",  configMINIMAL_STACK_SIZE + 1024,  NULL,  1,  &xTaskPrintHandle,APP_CPU_NUM);
+    xTaskCreatePinnedToCore(vTaskPrint,  "TaskPrint",   configMINIMAL_STACK_SIZE + 2048,  NULL,  2,  &xTaskPrintHandle,PRO_CPU_NUM);
     //xTaskCreatePinnedToCore(vTaskMQTTReceive,  "TaskMQTT",  configMINIMAL_STACK_SIZE + 4096,  NULL,  2,  &xTaskMQTTReceiveHandle,PRO_CPU_NUM);  
     xTaskCreatePinnedToCore(vTaskValvula, "TaskValvula", configMINIMAL_STACK_SIZE + 1024, NULL, 1, &xTaskValvulaHandle, PRO_CPU_NUM);
-    
-    
     xTimerStart(xTimer_sensor,0);
 }
 
 void callBackTimer_sensor(TimerHandle_t pxTimer ){
   int adcValue;
   adcValue = le_sensor();
-  //Serial.print("Valor do sensor: ");
-  //Serial.println(adcValue);
   xQueueSend(xFila,&adcValue,portMAX_DELAY);
 }
 
@@ -117,13 +120,14 @@ void vTaskBotao(void *pvParameters){
 void vTaskPrint(void *pvParameters ){
   (void) pvParameters;  
   int valor_recebido = 0;
+  //char mensagem_sensor[30];
 
   while(1){
       if(xQueueReceive(xFila, &valor_recebido, portMAX_DELAY) == pdTRUE) {//verifica se há valor na fila para ser lido. Espera 1 segundo
-        //imprimeSensorDisplay(valor_recebido);
-        //mqttIsConected();
-        //sprintf(mensagem_sensor, "%d", valor_recebido);
-        //mqttSend_sensor(mensagem_sensor);
+        if(btn_state == 1) displayImprimeManual(valor_recebido);
+        else displayImprimeAutomatico(valor_recebido);
+        //envio mqtt sensor
+        sensor_higrometro = valor_recebido;
         Serial.print("Valor do sensor: ");
         Serial.println(valor_recebido);
       }
@@ -153,13 +157,11 @@ void vTaskValvula(void *pvParameters){
   while(1){
     if(btn_state == 1) {
       acionar_valvula();
-      //display
-      //MQTTSend_Valvula
+      //envio mqtt valvula
     }  
     else {
       desligar_valvula();
-      //Display
-      //MQTTSend_Valvula
+      //envio mqtt valvula
     }
     vTaskDelay(pdMS_TO_TICKS(100));
   }

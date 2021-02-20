@@ -29,5 +29,6 @@ void displayImprimeManual(int valorD){
     lcd.print("% umidade:");
     lcd.setCursor(10,1);
     lcd.println(valorD);
+    lcd.print("%");
     delay(500);
 }

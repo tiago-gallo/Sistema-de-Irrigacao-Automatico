@@ -8,4 +8,6 @@
     #include "botao.h"
     #include "mqtt.h"
 
+    //char btn_state = 0;
+
 #endif //_MAIN_H_
