@@ -26,6 +26,7 @@ vTaskValvula       0     1     Faz o acionamento da eletroválvula
 
 char btn_state = 0;
 int sensor_higrometro = 0;
+char flag_valvula = 0;
 
 //Handle dos timers
 
@@ -124,10 +125,11 @@ void vTaskPrint(void *pvParameters ){
 
   while(1){
       if(xQueueReceive(xFila, &valor_recebido, portMAX_DELAY) == pdTRUE) {//verifica se há valor na fila para ser lido. Espera 1 segundo
+        sensor_higrometro = valor_recebido;
         if(btn_state == 1) displayImprimeManual(valor_recebido);
         else displayImprimeAutomatico(valor_recebido);
-        //envio mqtt sensor
-        sensor_higrometro = valor_recebido;
+        if (valor_recebido < 25) flag_valvula = 1;
+        else if (valor_recebido > 75) flag_valvula = 0;
         Serial.print("Valor do sensor: ");
         Serial.println(valor_recebido);
       }
@@ -155,11 +157,11 @@ void vTaskValvula(void *pvParameters){
   init_valvula();
   
   while(1){
-    if(btn_state == 1) {
+    if(btn_state == 1 || flag_valvula == 1) {
       acionar_valvula();
       //envio mqtt valvula
     }  
-    else {
+    else if (btn_state == 0 || flag_valvula == 0){
       desligar_valvula();
       //envio mqtt valvula
     }
