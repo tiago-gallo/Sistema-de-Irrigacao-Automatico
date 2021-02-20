@@ -3,6 +3,7 @@
 Sistema de Irrigação Automatico
 Autores:  Tiago Gallo Faria - 200014441
           Danillo Lins - 200013897
+	  Lucas Ramalho - 080042306
 
 Professor:  Fabio Souza
 Disciplina: Sistemas Operacionais e RTOS de Sistemas Embarcados
