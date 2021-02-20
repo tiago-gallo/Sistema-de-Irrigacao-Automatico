@@ -27,6 +27,7 @@ vTaskValvula       0     1     Faz o acionamento da eletroválvula
 char btn_state = 0;
 int sensor_higrometro = 0;
 char flag_valvula = 0;
+char valvula_state = 0;
 
 //Handle dos timers
 
@@ -57,8 +58,8 @@ void vTaskValvula(void *pvParameters);
 //Timers
 void callBackTimer_sensor(TimerHandle_t pxTimer );
 
-char retorno_btn_state(){
-  return(btn_state);
+char retorno_valvula(){
+  return(valvula_state);
 }
 
 int retorno_sensor(){
@@ -159,11 +160,11 @@ void vTaskValvula(void *pvParameters){
   while(1){
     if(btn_state == 1 || flag_valvula == 1) {
       acionar_valvula();
-      //envio mqtt valvula
+      valvula_state = 1;
     }  
     else if (btn_state == 0 || flag_valvula == 0){
       desligar_valvula();
-      //envio mqtt valvula
+      valvula_state = 0;
     }
     vTaskDelay(pdMS_TO_TICKS(100));
   }

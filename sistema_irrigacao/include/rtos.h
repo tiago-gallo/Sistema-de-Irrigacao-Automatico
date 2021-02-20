@@ -15,7 +15,7 @@
 
 
 void rtosInit();
-char retorno_btn_state();
+char retorno_valvula();
 int retorno_sensor();
 
 #endif

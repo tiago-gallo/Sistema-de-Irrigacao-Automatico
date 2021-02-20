@@ -12,8 +12,8 @@ Instituição:  Centro Universitario Salesiano de São Paulo
 
 #include "main.h"
 
-char btn_state_recebido = 0;
-char btn_state_recebido_last = 0;
+char valvula_recebido = 0;
+char valvula_recebido_last = 0;
 int sensor_higrometro_recebido = 0;
 char mensagem_valvula[30];
 char mensagem_sensor[30];
@@ -31,14 +31,14 @@ void setup() {
 
 void loop() {
   
-        btn_state_recebido = retorno_btn_state();
+        valvula_recebido = retorno_valvula();
         delay_sensor++;
-        if (btn_state_recebido != btn_state_recebido_last){
+        if (valvula_recebido != valvula_recebido_last){
           mqttIsConected();
-          sprintf(mensagem_valvula, "%d", btn_state_recebido);
+          sprintf(mensagem_valvula, "%d", valvula_recebido);
           mqttSend_valvulaState(mensagem_valvula);
           vTaskDelay(pdMS_TO_TICKS(1000));
-          btn_state_recebido_last = btn_state_recebido;
+          valvula_recebido_last = valvula_recebido;
         }
 
         if(delay_sensor > 150){
